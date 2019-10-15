@@ -1,5 +1,6 @@
 var spawn = require('cross-spawn'),
-    fs = require('fs');
+    fs = require('fs'),
+    fetch = require('node-fetch');
 
 function command(ins, outs, config, cb) {
     var exec = config.executor.executable,
@@ -45,6 +46,31 @@ function command_print(ins, outs, config, cb) {
     }, 1);
 }
 
+function command_simulate(ins, outs, config, cb) {
+    const host = 'http://0.0.0.0:8080/execute';
+    const body = {
+        workflowId: config.appId,
+        hyperflowId: config.hfId,
+        procId: config.procId,
+        name: config.name,
+        executor: config.executor,
+    };
+
+    fetch(host, {
+        method: 'post',
+        body:    JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+    }).then(res => {
+        if (res.status == 200) {
+            console.log('ok')
+            cb(null, outs)
+        }
+    }).catch(err => {
+        console.log({err})
+        cb(err, outs)
+    })
+}
+
 function command_notifyevents(ins, outs, config, cb) {
     var exec = config.executor.executable,
         args = config.executor.args;
@@ -61,4 +87,5 @@ function command_notifyevents(ins, outs, config, cb) {
 
 exports.command = command;
 exports.command_print = command_print;
+exports.command_simulate = command_simulate;
 exports.command_notifyevents = command_notifyevents;

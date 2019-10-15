@@ -1,0 +1,18 @@
+version: '3.2'
+services:
+  redis:
+    image: 'bitnami/redis:4.0.12'
+    command: /run.sh --maxmemory 200mb
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'yes'
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.100.0.1/16

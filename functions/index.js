@@ -1,8 +1,8 @@
-var fsp = require('./fileSplitter.js'), 
+var fsp = require('./fileSplitter.js'),
     cmd = require('./command.js'),
     amqpCmd = require('./amqpCommand.js'),
     RESTCmd = require('./RESTServiceCommand.js'),
-	fargateCmd = require('./awsFargateCommand.js'),
+    fargateCmd = require('./awsFargateCommand.js'),
     lambdaCmd = require('./awsLambdaCommand.js'),
     commandLocalMock = require('./commandLocalMock.js'),
     scanDir = require('./DirScanner').scanDir;
@@ -10,16 +10,16 @@ var fsp = require('./fileSplitter.js'),
 
 function print(ins, outs, config, cb) {
     //console.log("PRINT", JSON.stringify(ins));
-        ins.forEach(function(input) {
-                //console.log("sigId=", input.sigId + ":", input.data[0])
-		//console.log(JSON.stringify(input, null, 2));
-		if (input.data && input.data[0].value) {
-                    console.log(input.data[0].value);
-		} else {
-                    console.log(JSON.stringify(input, null, 2));
-                }
-        });
-        cb(null, outs);
+    ins.forEach(function(input) {
+        //console.log("sigId=", input.sigId + ":", input.data[0])
+        //console.log(JSON.stringify(input, null, 2));
+        if (input.data && input.data[0].value) {
+            console.log(input.data[0].value);
+        } else {
+            console.log(JSON.stringify(input, null, 2));
+        }
+    });
+    cb(null, outs);
 }
 
 function print2(ins, outs, config, cb) {
@@ -43,7 +43,7 @@ function echo(ins, outs, config, cb) {
     //onsole.log("ECHO", JSON.stringify(ins, null, 2));
 
     //if (typeof data == "object" || typeof data == "array")
-     //   data = JSON.stringify(data);
+    //   data = JSON.stringify(data);
 
     //process.stdout.write(data[2]);
     //console.log(data);
@@ -111,13 +111,13 @@ function chooseEvenOdd(ins, outs, config, cb) {
             sum += parseInt(ins[i].data[0].value);
         }
     }
-	if (sum % 2 == 0) {
-		outs[0].data = [ { "value": sum } ];
-		outs[0].condition = "true";
-	} else {
-		outs[1].data = [ { "value": sum } ];
-		outs[1].condition = "true";
-	}
+    if (sum % 2 == 0) {
+        outs[0].data = [ { "value": sum } ];
+        outs[0].condition = "true";
+    } else {
+        outs[1].data = [ { "value": sum } ];
+        outs[1].condition = "true";
+    }
     cb(null, outs);
 }
 
@@ -146,7 +146,7 @@ function grepFile(ins, outs, config, cb) {
         return;
     }
     console.log("grepFile: '"+ ins[1].value+"'", outs[0].value);
-    cb(null, outs); 
+    cb(null, outs);
 }
 
 
@@ -156,17 +156,17 @@ function count(ins, outs, config, cb) {
     //onsole.log(ins.length);
     //onsole.log("COUNT INS:", ins.length);
     /*ins.forEach(function(input) {
-      console.log(input); 
+      console.log(input);
     });*/
     /*console.log("COUNT OUTS:", outs.length);
     outs.forEach(function(output) {
-      console.log(output); 
+      console.log(output);
     });*/
- 
+
     outs[0].data = [];
     ins[0].data.forEach(function(cnt) {
         outs[0].data.push(cnt+1);
-        if (cnt % 1000 == 0) { 
+        if (cnt % 1000 == 0) {
             console.log("count:", cnt);
         }
         if (cnt == 5000) {
@@ -177,8 +177,8 @@ function count(ins, outs, config, cb) {
 }
 
 function exit(ins, outs, config, cb) {
-  console.log("Exiting\n\n");
-  process.exit(0);
+    console.log("Exiting\n\n");
+    process.exit(0);
 }
 
 function genCollection(ins, outs, config, cb) {
@@ -186,7 +186,7 @@ function genCollection(ins, outs, config, cb) {
     outs[0].data = [];
 
     for (var i=0; i<len; i++) {
-        //outs[0].data.push(Math.floor(Math.random() * 5) + 1); 
+        //outs[0].data.push(Math.floor(Math.random() * 5) + 1);
         outs[0].data.push(i+1);
     }
 
@@ -221,6 +221,7 @@ exports.awsLambdaCommand = lambdaCmd.awsLambdaCommand;
 exports.exit = exit;
 exports.command_print = cmd.command_print;
 exports.command_notifyevents = cmd.command_notifyevents;
+exports.command_simulate = cmd.command_simulate;
 exports.scanDirForJs = scanDirForJs;
 exports.grepFile = grepFile;
 exports.chooseEvenOdd = chooseEvenOdd;
